@@ -18,12 +18,16 @@ export default function Home() {
         onOpen(true)
     }
 
+    const onClose = function (){
+        onOpen(false)
+    }
+
     return (
         <>
             <Header/>
             <Navbar write={write}/>
             <Hero/>
-            <EditDrawer isOpen={isOpen}/>
+            <EditDrawer isOpen={isOpen} onClose={onClose}/>
         </>
     );
 }

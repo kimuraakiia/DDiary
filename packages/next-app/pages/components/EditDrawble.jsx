@@ -6,9 +6,8 @@ import {
     InputLeftAddon,
     InputRightAddon,
     Select,
-    Stack, Textarea,
-} from "@chakra-ui/react";
-import {
+    Stack,
+    Textarea,
     Drawer,
     DrawerBody,
     DrawerFooter,
@@ -16,12 +15,13 @@ import {
     DrawerOverlay,
     DrawerContent,
     DrawerCloseButton,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react";
 import React from "react";
 
 
 function EditDrawer(props) {
     const firstField = React.useRef()
+
 
     return (
         <>
@@ -30,19 +30,19 @@ function EditDrawer(props) {
                 placement='right'
                 initialFocusRef={firstField}
                 size={'lg'}
-                // onClose={onClose}
+                onClose={props.onClose}
             >
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
                     <DrawerHeader borderBottomWidth='1px'>
-                        Create a new account
+                        Create a new Diary
                     </DrawerHeader>
 
                     <DrawerBody>
                         <Stack spacing='24px'>
                             <Box>
-                                <FormLabel htmlFor='username'>Name</FormLabel>
+                                <FormLabel htmlFor='username'>Title</FormLabel>
                                 <Input
                                     ref={firstField}
                                     id='username'
@@ -79,7 +79,7 @@ function EditDrawer(props) {
                     </DrawerBody>
 
                     <DrawerFooter borderTopWidth='1px'>
-                        <Button variant='outline' mr={3} >
+                        <Button variant='outline' mr={3} onClick={props.onClose}>
                             Cancel
                         </Button>
                         <Button colorScheme='blue'>Submit</Button>
