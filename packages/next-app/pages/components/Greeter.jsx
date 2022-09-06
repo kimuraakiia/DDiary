@@ -34,6 +34,7 @@ function Greeter() {
     watch: true,
   });
 
+
   const { config } = usePrepareContractWrite({
     addressOrName: greeterAddress,
     contractInterface: contractAbi,

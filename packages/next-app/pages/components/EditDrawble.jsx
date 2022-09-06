@@ -21,7 +21,15 @@ import React from "react";
 
 function EditDrawer(props) {
     const firstField = React.useRef()
+    const contentField = React.useRef()
+    const [resize, setResize] = React.useState('Vertical')
 
+    const save = function () {
+        const title = firstField.current.value
+        const content = contentField.current.value
+
+        props.submitDiary(title,content)
+    }
 
     return (
         <>
@@ -50,30 +58,14 @@ function EditDrawer(props) {
                                 />
                             </Box>
 
-                            <Box>
-                                <FormLabel htmlFor='url'>Url</FormLabel>
-                                <InputGroup>
-                                    <InputLeftAddon>http://</InputLeftAddon>
-                                    <Input
-                                        type='url'
-                                        id='url'
-                                        placeholder='Please enter domain'
-                                    />
-                                    <InputRightAddon>.com</InputRightAddon>
-                                </InputGroup>
-                            </Box>
 
                             <Box>
-                                <FormLabel htmlFor='owner'>Select Owner</FormLabel>
-                                <Select id='owner' defaultValue='segun'>
-                                    <option value='segun'>Segun Adebayo</option>
-                                    <option value='kola'>Kola Tioluwani</option>
-                                </Select>
-                            </Box>
-
-                            <Box>
-                                <FormLabel htmlFor='desc'>Description</FormLabel>
-                                <Textarea id='desc' />
+                                <FormLabel htmlFor='desc'>Content</FormLabel>
+                                <Textarea id='desc'
+                                          size='lg'
+                                          resize={resize}
+                                          ref={contentField}
+                                />
                             </Box>
                         </Stack>
                     </DrawerBody>
@@ -82,7 +74,7 @@ function EditDrawer(props) {
                         <Button variant='outline' mr={3} onClick={props.onClose}>
                             Cancel
                         </Button>
-                        <Button colorScheme='blue'>Submit</Button>
+                        <Button colorScheme='blue' onClick={()=>{save()}}>Submit</Button>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
