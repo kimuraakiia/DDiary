@@ -7,7 +7,7 @@ import EditDrawer from "./components/EditDrawble";
 import {Web3Storage} from 'web3.storage'
 import {diaryAddress, greeterAddress} from "../utils/contractAddress";
 import contractAbi from "../contracts/ABI/Diary.json";
-import {Text} from "@chakra-ui/react";
+import {Grid, GridItem, Text} from "@chakra-ui/react";
 
 export default function Home() {
     const {address, isConnected} = useAccount();/**/
@@ -16,6 +16,7 @@ export default function Home() {
 
     const [cid, setCid] = React.useState(" ")
     const [fileHash, setFileHash] = React.useState(" ")
+    const [cidTitle, setTitle] = React.useState(" ")
 
 
     const {data, isError, isLoading} = useContractRead({
@@ -31,14 +32,14 @@ export default function Home() {
         addressOrName: diaryAddress,
         contractInterface: contractAbi,
         functionName: "addDiary",
-        args: [cid, fileHash]
+        args: [cid, fileHash, cidTitle]
     });
 
     const writeBack = function () {
         onOpen(true)
     }
 
-    const onClose = async function () {
+    const onClose = function () {
         onOpen(false)
     }
 
@@ -62,11 +63,15 @@ export default function Home() {
         const file = new File([finalizedFileContent], fileHash, {type: 'text/plain'});
         const cid = await storageClient.put([file]);
         console.log(cid)
-
         setCid(cid)
         setFileHash(fileHash)
+        setTitle(title)
 
-        await write({args: [cid, fileHash]})
+        await write({
+            overrides: {
+                gasLimit: "1000000",
+            },
+        })
     }
     console.log(data)
     return (
@@ -74,11 +79,18 @@ export default function Home() {
             <Header/>
             <Navbar write={writeBack}/>
             <Hero/>
-            <Text> {data.map((reptile) => (
-                <div>
-                    <li>{reptile.cid}-{reptile.fileHash}</li>
+
+            {
+                isConnected && data && <div style={{marginLeft: "20%", marginRight: "20%"}}>
+                    <Grid templateColumns='repeat(5, 1fr)' gap={5}>
+                        {data.map((reptile) => (
+                            <GridItem w='100%' h='10' bg='blue.500'>
+                                <p>{reptile.title}</p>
+                            </GridItem>
+                        ))}
+                    </Grid>
                 </div>
-            ))}</Text>
+            }
 
             <EditDrawer isOpen={isOpen} onClose={onClose} submitDiary={submitDiary}/>
         </>

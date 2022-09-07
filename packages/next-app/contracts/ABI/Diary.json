@@ -10,6 +10,11 @@
         "internalType": "string",
         "name": "fileHash",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "title",
+        "type": "string"
       }
     ],
     "name": "addDiary",
@@ -29,6 +34,11 @@
     "outputs": [
       {
         "components": [
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
           {
             "internalType": "string",
             "name": "cid",
