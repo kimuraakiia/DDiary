@@ -19,7 +19,7 @@ function Hero() {
             <Heading
               className={"h-shadow-black"}
               fontWeight={"700"}
-              fontSize={["1.4rem", "1rem", "2.5rem", "3rem", "4rem"]}
+              fontSize={'2.2rem'}
             >
               Welcome to&nbsp;
             </Heading>
@@ -31,7 +31,7 @@ function Hero() {
             >
               <Heading
                 fontWeight={"700"}
-                fontSize={["1.4rem", "1rem", "2.5rem", "3rem", "4rem"]}
+                fontSize={'2.2rem'}
               >
                 Web3 Diary !
               </Heading>
@@ -40,7 +40,7 @@ function Hero() {
 
           <Text
             textAlign={"center"}
-            fontSize={["1rem", "1rem", "1.2rem", "1.4rem", "1.6rem"]}
+            fontSize={"1rem"}
           >
             Here instead of
             <Code fontSize={"1.5rem"}>web2/handwritten</Code>

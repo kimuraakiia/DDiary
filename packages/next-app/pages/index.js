@@ -7,17 +7,24 @@ import EditDrawer from "./components/EditDrawble";
 import {Web3Storage} from 'web3.storage'
 import {diaryAddress, greeterAddress} from "../utils/contractAddress";
 import contractAbi from "../contracts/ABI/Diary.json";
-import {Grid, GridItem, Text} from "@chakra-ui/react";
+import {Box, Grid, GridItem, Heading, LinkBox, LinkOverlay, Text, useDisclosure} from "@chakra-ui/react";
+import ViewDrawer from "./components/ViewDrawer";
 
 export default function Home() {
     const {address, isConnected} = useAccount();/**/
-    const [isOpen, onOpen] = React.useState(false)
+    const [isEditOpen, setOpen] = React.useState(false)
     const storageClient = new Web3Storage({token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDVkNDNFZTQ1NzkyZDJiMWY2RGQ0MjQzYzA3YTU5MDEyNjc0YzZFYzAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NjI0NjA4MzQ0MTMsIm5hbWUiOiJhIn0.KL20TkTspADvFteE3Z9P5gAcPcqlHQS8cE_PzM36JJ8'})
 
     const [cid, setCid] = React.useState(" ")
     const [fileHash, setFileHash] = React.useState(" ")
     const [cidTitle, setTitle] = React.useState(" ")
 
+    const [viewTitle, setViewTitle] = React.useState(" ")
+    const [viewContent, setViewContent] = React.useState(" ")
+    const [viewTime, setViewTime] = React.useState(" ")
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const {data, isError, isLoading} = useContractRead({
         addressOrName: diaryAddress,
@@ -36,11 +43,11 @@ export default function Home() {
     });
 
     const writeBack = function () {
-        onOpen(true)
+        setOpen(true)
     }
 
-    const onClose = function () {
-        onOpen(false)
+    const onEditDrawerClose = function () {
+        setOpen(false)
     }
 
     const sha256 = async (str) => {
@@ -50,7 +57,7 @@ export default function Home() {
 
 
     const submitDiary = async function (title, content) {
-        onClose()
+        onEditDrawerClose()
 
         const formattedContent = {
             isFile: false,
@@ -73,7 +80,20 @@ export default function Home() {
             },
         })
     }
-    console.log(data)
+
+    const viewDetails = async function (v) {
+        console.log(v)
+
+        const url = "https://dweb.link/ipfs/"+v.cid+"/"+v.fileHash
+        const res = await fetch(url)
+        const resJson = await res.json();
+        console.log(resJson)
+        setViewTitle(resJson['title'])
+        setViewContent(resJson['content'])
+        setViewTime(resJson['timestamp'])
+        onOpen()
+    }
+
     return (
         <>
             <Header/>
@@ -81,18 +101,31 @@ export default function Home() {
             <Hero/>
 
             {
-                isConnected && data && <div style={{marginLeft: "20%", marginRight: "20%"}}>
+                isConnected && data && <div style={{marginLeft: "20%", marginRight: "20%",marginBottom:"128px"}}>
                     <Grid templateColumns='repeat(5, 1fr)' gap={5}>
                         {data.map((reptile) => (
-                            <GridItem w='100%' h='10' bg='blue.500'>
-                                <p>{reptile.title}</p>
+                            <GridItem w='100%' >
+                                <LinkBox onClick={()=>{viewDetails(reptile)}} as='article' maxW='sm' p='5' borderWidth='1px' rounded='md'>
+                                    <Heading size='md' my='2'>
+                                        <LinkOverlay href='#'>
+                                            <Heading>
+                                                {reptile.title}
+                                            </Heading>
+                                        </LinkOverlay>
+                                    </Heading>
+                                    <Text>
+                                        {reptile.cid}
+                                    </Text>
+                                </LinkBox>
                             </GridItem>
                         ))}
                     </Grid>
                 </div>
             }
 
-            <EditDrawer isOpen={isOpen} onClose={onClose} submitDiary={submitDiary}/>
+            <EditDrawer isOpen={isEditOpen} onClose={onEditDrawerClose} submitDiary={submitDiary}/>
+
+            <ViewDrawer isOpen={isOpen} onClose={onClose} onOpen={onOpen} title = {viewTitle} content={viewContent} timestamp={viewTime}/>
         </>
     );
 }
