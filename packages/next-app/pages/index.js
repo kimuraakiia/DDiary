@@ -104,7 +104,7 @@ export default function Home() {
                 isConnected && data && <div style={{marginLeft: "20%", marginRight: "20%",marginBottom:"128px"}}>
                     <Grid templateColumns='repeat(5, 1fr)' gap={5}>
                         {data.map((reptile) => (
-                            <GridItem w='100%' >
+                            <GridItem w='100%' key={reptile.cid} >
                                 <LinkBox onClick={()=>{viewDetails(reptile)}} as='article' maxW='sm' p='5' borderWidth='1px' rounded='md'>
                                     <Heading size='md' my='2'>
                                         <LinkOverlay href='#'>
